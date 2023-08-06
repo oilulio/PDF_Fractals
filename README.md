@@ -17,7 +17,8 @@ But with a modern computer it runs OK, as long as enough time is given for the r
 
 The initial PDFs were hand-generated, but this repo includes a later simple python script to make a PDF file.  Doesn't rely on any external libraries, which is why it still works after many years.
 
-The core code for a Mandelbrot Set is z<sub>n+1</sub>=z<sub>n</sub><sup>2</sup> + c.  If we assume z = a + ib and c = x + iy, and the stack contains y,x,b,a in downwards order, then we obtain an updated z (a,b on the stack) via: 
+## Mandelbrot Set
+The core code for a Mandelbrot Set is z<sub>n+1</sub>=z<sub>n</sub><sup>2</sup> + c, with z<sub>0</sub>=0 and hence z<sub>1</sub>=c.  If we assume z = a + ib and c = x + iy, and the stack contains y,x,b,a in downwards order, then we obtain an updated z (a,b on the stack) via: 
 
 ```postscript
 2 copy % another z to work with

@@ -30,7 +30,7 @@ XSHIFT="-0.6"  # note strings
 SCALE="0.8" # Works on the default A4
 DEPTH=32   # Equipotentials to show.  Don't exceed 32 if using colours
 SQ_THRESHOLD="15" # Squared distance, as string, considered to show out of set
-BANDW=False  # Use colour?
+BANDW=True  # Use colour?
 
 #From https://stackoverflow.com/questions/16500656/which-color-gradient-is-used-to-color-mandelbrot-in-wikipedia; by q9f 
 #  R   G   B
@@ -101,7 +101,7 @@ addObject(4,["<< /Type /Page",
              "  >>",
              ">>"])
 
-stream=["stream","0.0 G","W n","q",\
+stream=["stream","0.0 G","W n","q",
        "/Pattern cs  %colourspace is pattern",
        "/P1 scn   % non stroking colour ",
        "  1.0 0.0000 0.0000 1.0 421.0 297.0 cm      % translate",
@@ -123,17 +123,7 @@ addObject(7,["<< /ShadingType 1              % Function-based shading",
 
 
 stream=["stream","{",SCALE+" div","exch "+SCALE+" div",XSHIFT+" add %  Maps x to align on screen (x -> (x + XSHIFT))",
-        "2 copy",
-        "2 copy    %  another z to work with",
-        "2 mul mul   %  calc 2ab",
-        "4 index  %  get y",
-        "add %  Gives Im(z)(n+1) = 2ab + y",
-        "3 1 roll",
-        "dup mul  %  a^2",
-        "exch dup mul  %  b^2",
-        "sub  %  Re(z) (n+1) = x - b^2 + a^2",
-        "2 index add % obtain x",
-        "% stack should be c; z(n+1)",
+        "2 copy", # Since z0 is 0, 1st pass just returns c.
         "2 copy dup mul exch dup mul add % calc arg^2",
         SQ_THRESHOLD+" ge {pop pop pop pop 255 255 255 }"]
 
