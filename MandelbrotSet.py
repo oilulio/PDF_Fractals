@@ -53,6 +53,7 @@ COLOURS=\
  [106,52,3]] # brown 2
 
 newline="\x0D" #\x0A"  # May be CR, LF or CRLF
+
 index=[0]*20
 XREF_STATES={"used":"n", "free":"f"}
 
@@ -77,10 +78,17 @@ def addObject(n,text,anObject=True):   # append nth Object
   return
 
 def streamLength(stream):
+  """ Length of stream is the byte length of everything between the stream and endstream markers, including
+  the EOL bytes (except it, appears, the last one)
+  Note the stream is a list, each element of which goes on a separate line """
   length=0
+  
   for s in stream:
     if (s!="endstream" and s!="stream"):
-      length+=len(s)+2   # +2 for newline chars
+      length+=len(s)+len(newline)
+
+  if (length!=0):
+    length-=1  # Last EOL not counted
 
   return str(length)
     
@@ -175,11 +183,8 @@ addObject(9,["<< /Title ("+TITLE+")",
              "/CreationDate ("+MODDATE+")",
              ">>"])
 
-addObject(10,["<< /FunctionType 4 % postscript calculator function", # Unused??
-             "/Domain [-500 500 -500 500]",
-             "/Range [-500 500 -500 500]  % required (type 0 & 4)",
-             "/Length 5207",
-             ">>","stream",
+
+stream=["stream",
              "{",
              "2 copy % another z to work with",
              "2 mul mul % calc 2ab",
@@ -192,7 +197,13 @@ addObject(10,["<< /FunctionType 4 % postscript calculator function", # Unused??
              "2 index % obtain x"
              "add",
              "}",
-             "endstream"])
+             "endstream"]
+stream.insert(0,"/Length "+streamLength(stream)+" >>")
+
+stream.insert(0,"/Range [-500 500 -500 500]  % required (type 0 & 4)")
+stream.insert(0,"/Domain [-500 500 -500 500]")
+stream.insert(0,"<< /FunctionType 4 % postscript calculator function") 
+addObject(10,stream) # Unused??
 
 addObject(11,["<< /Type /Pattern",
              "/PatternType 2 % 2 is shading pattern",
