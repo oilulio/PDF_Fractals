@@ -3,7 +3,7 @@ A way of creating a PDF file that will draw a fractal (not just contain an image
 
 This was first written (as hand-created PDF - see https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/pdfreference1.5_v6.pdf) almost 20 years ago, in c.2005.
 
-The basic idea is that the PDF file format uses Postscript functions code (specifically mathematical functions coded in Reverse Polish Notation) to generate images.
+The PDF file format allows Postscript functions code (specifically mathematical functions coded in Reverse Polish Notation) to generate images at runtime, as an alternative to an embedded image.
 
 The simplest bit of code is one that is the same for every pixel - such as a Mandelbrot Set fractal.
 
@@ -45,3 +45,21 @@ add % a^2 + b^2
 ```
 
 And repeat the n+1 generation for further equipotential cases.  A different colour at different generations gives an impressive image.
+
+## Julia Set
+The core code for a Julia Set is also z<sub>n+1</sub>=z<sub>n</sub><sup>2</sup> + c, however z<sub>0</sub>=the candidate value, and c is a fixed constant.  If we assume z = a + ib, and the stack contains b,a in downwards order, then we obtain an updated z (a,b on the stack) via: 
+
+```postscript
+2 copy % another z to work with
+2 mul mul % calc 2ab
+0.156 % set y
+add % Gives Im(z)(n+1) = 2ab + y
+3 1 roll
+dup mul % a^2
+exch dup mul % b^2
+sub % a^2 - b^2
+-0.8 % set x
+add % Gives Re(z) (n+1) = x - b^2 + a^2
+```
+
+Note x,y are now set explicitly - in this example to -0.8 and 0.156 respectively.
